@@ -4,7 +4,8 @@ namespace Idy\Idea\Domain\Model;
 
 interface IdeaRepository
 {
-    public function byId(IdeaId $id) : ?Idea;
+    public function byId(IdeaId $id);
     public function save(Idea $idea);
-    public function all() : ?array;
+    public function update(Idea $idea);
+    public function allIdeas();
 }

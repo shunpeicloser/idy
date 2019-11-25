@@ -2,7 +2,7 @@
 
 namespace Idy\Idea\Application;
 
-class VoteIdeaResponse
+class CreateNewIdeaResponse
 {
     public $msg;
 

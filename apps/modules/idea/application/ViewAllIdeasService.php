@@ -3,7 +3,6 @@
 namespace Idy\Idea\Application;
 
 use Idy\Idea\Domain\Model\IdeaRepository;
-use Idy\Idea\Domain\Model\Idea;
 
 class ViewAllIdeasService
 {
@@ -17,25 +16,7 @@ class ViewAllIdeasService
 
     public function execute()
     {
-        $ideas = $this->ideaRepository->all();
-
-        $response = new ViewAllIdeasResponse();
-
-        if ($ideas) {
-            foreach ($ideas as $row) {
-                $response->addIdeaResponse(
-                    $row->id()->id(),
-                    $row->title(),
-                    $row->description(),
-                    $row->author()->name(),
-                    $row->author()->email(),
-                    $row->averageRating(),
-                    $row->totalVotes()
-                );
-            }
-        }
-
-        return $response;
+        return new ViewAllIdeasResponse($this->ideaRepository->allIdeas());
     }
 
 }

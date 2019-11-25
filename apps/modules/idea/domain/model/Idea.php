@@ -8,8 +8,18 @@ class Idea
     private $title;
     private $description;
     private $author;
-    private $averageRating;
-    private $totalVotes;
+    private $ratings;
+    private $votes;
+    
+    public function __construct(IdeaId $id, $title, $description, Author $author)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->description = $description;
+        $this->author = $author;
+        $this->ratings = array();
+        $this->votes = 0;
+    }
 
     public function id() 
     {
@@ -31,31 +41,14 @@ class Idea
         return $this->author;
     }
 
-    public function totalVotes()
+    public function votes()
     {
-        return $this->totalVotes;
+        return $this->votes;
     }
 
-    public function averageRating()
+    public function addRating($user, $ratingValue)
     {
-        return $this->averageRating;
-    }
-
-    public function __construct(
-        IdeaId $id, $title, $description, 
-        Author $author, $averageRating, $totalVotes)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->description = $description;
-        $this->author = $author;
-        $this->averageRating = $averageRating;
-        $this->totalVotes = $totalVotes;
-    }
-
-    public function addRating($raterEmail, RatingValue $ratingValue)
-    {
-        $newRating = new Rating(new RatingId(), $raterEmail, $ratingValue);
+        $newRating = new Rating($user, $ratingValue);
 
         if ($newRating->isValid()) {
             $exist = false;
@@ -84,11 +77,21 @@ class Idea
         $this->votes = $this->votes + 1;
     }
 
-    public static function makeIdea($title, $description, $authorName, $authorEmail)
+    public function averageRating()
     {
-        $author = new Author($authorName, $authorEmail);
-        
-        $newIdea = new Idea(new IdeaId(), $title, $description, $author, 0, 0);
+        $numberOfRatings = count($this->rating);
+        $totalRatings = 0;
+
+        foreach ($this->ratings as $rating) {
+            $totalRatings += $rating->value();
+        }
+
+        return $totalRatings / $numberOfRatings;
+    }
+
+    public static function makeIdea($title, $description, $author)
+    {
+        $newIdea = new Idea(new IdeaId(), $title, $description, $author);
         
         return $newIdea;
     }
